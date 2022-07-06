@@ -33,8 +33,8 @@ measure_type="LIX"
 ingredients_list = "taco, burrito, fritos"
 def get_readability_score(ingredients,measure):
   tokenized = word_tokenize(ingredients)
-	ingredients = tokenized
-	read = readability.getmeasures(ingredients,lang='en')
+  ingredients = tokenized
+  read = readability.getmeasures(ingredients,lang='en')
   return round(read['readability grades'][measure],2)
 ```
 script
