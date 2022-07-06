@@ -44,4 +44,6 @@ df = pd.read_csv("en.openfoodfacts.org.products.USonly.csv",sep="\t")
 tmpdf = df[["product_name","nova_group","ingredients_text","code","countries_tags"]]
 tmpdf = tmpdf.dropna(subset=["product_name","nova_group","ingredients_text","code","countries_tags"])
 tmpdf = tmpdf[~tmpdf.countries_tags.isin(['en:united-states'])]
+tmpdf['readability_lix'] = tmpdf.apply(get_readability_score(tmpdf["ingredients_text"],"LIX"))
+
 ```
