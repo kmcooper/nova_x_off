@@ -14,10 +14,32 @@ grep "United States" en.openfoodfacts.org.products.csv >> en.openfoodfacts.org.p
 
 python extract 
 ```
+# Options for readability measures are
+# Kincaid
+# ARI
+# Coleman-Liau
+# FleshReadingEase
+# GunningFogIndex
+# LIX
+# SMOGIndex
+# RIX
+# DaleChallIndex
+
 import pandas as pd
 import readability
 from nltk.tokenize import word_tokenize
 import sys
+measure_type="LIX"
+ingredients_list = "taco, burrito, fritos"
+def get_readability_score(ingredients,measure):
+  tokenized = word_tokenize(ingredients)
+	ingredients = tokenized
+	read = readability.getmeasures(ingredients,lang='en')
+  return round(read['readability grades'][measure],2)
+```
+script
+```
+
 df = pd.read_csv("en.openfoodfacts.org.products.USonly.csv",sep="\t")
 tmpdf = df[["product_name","nova_group","ingredients_text","code","countries_tags"]]
 tmpdf = tmpdf.dropna(subset=["product_name","nova_group","ingredients_text","code","countries_tags"])
