@@ -15,6 +15,9 @@ grep "United States" en.openfoodfacts.org.products.csv >> en.openfoodfacts.org.p
 python extract 
 ```
 import pandas as pd
+import readability
+from nltk.tokenize import word_tokenize
+import sys
 df = pd.read_csv("en.openfoodfacts.org.products.USonly.csv",sep="\t")
 tmpdf = df[["product_name","nova_group","ingredients_text","code","countries_tags"]]
 tmpdf = tmpdf.dropna(subset=["product_name","nova_group","ingredients_text","code","countries_tags"])
