@@ -16,7 +16,7 @@ python extract
 ```
 import pandas as pd
 df = pd.read_csv("en.openfoodfacts.org.products.USonly.csv",sep="\t")
-tmpdf = df[["product_name","nova_group","ingredients_text","code"]]
-tmpdf = tmpdf.dropna(subset=['nova_group'])
-
+tmpdf = df[["product_name","nova_group","ingredients_text","code","countries_tags"]]
+tmpdf = tmpdf.dropna(subset=["product_name","nova_group","ingredients_text","code","countries_tags"])
+tmpdf = tmpdf[~tmpdf.countries_tags.isin(['en:united-states'])]
 ```
