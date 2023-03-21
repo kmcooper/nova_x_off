@@ -1,6 +1,14 @@
+# Measures of Reading Ease and NOVA Food Processing Classification on Ingredients Lists in the United States 
+This is the GitHub README page for the above titled project submitted to [tbd].
+
+## Data Download
+
 ```
+## Set up a file directory
 mkdir nova_x_off
 cd nova_x_off/
+
+## Grab the data from Open Food Facts
 wget https://static.openfoodfacts.org/data/en.openfoodfacts.org.products.csv.gz
 # CSV downloaded on June 30, 2022
 # File size ~69.5MB
@@ -82,3 +90,10 @@ ax7.set_title('Multiple Samples with Different sizes')
 ax7.boxplot(data)
 plt.show()
 ```
+
+## License
+The Python code shared on this page is available for use under the MIT License. 
+Please ensure when using data from Open Food Facts or other Python libraries that you are aware that their licenses may differ.
+
+## Contact
+If you have questions or concerns please contact Kate Cooper at kmcooper [at] unomaha [d0t] edu.
