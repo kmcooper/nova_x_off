@@ -34,13 +34,13 @@ import matplotlib.pyplot as plt
 from scipy import stats
 import seaborn as sns
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
+from statannot import add_stat_annotation
 ```
 
-### Analyze Ingredients by NOVA x Group
+### Analyze Ingredients by NOVA x Group, Figure 1a and 1b Generation
 Define what submeasure to grab from the `readability` library and define it as `submeasure`, then grab the score for that submeasure for all ingredients lists in all products in the dataset:
 ```
-submeasure="characters_per_word"
-
+submeasure="syll_per_word"
 def get_complexity_score(ingredients,measure):
   return_value = -500
   if(ingredients):
@@ -59,28 +59,43 @@ df = pd.read_csv("en.openfoodfacts.org.products.USonly.csv",sep="\t",encoding="u
 tmpdf = df[["product_name","nova_group","ingredients_text","code","countries_tags"]]
 tmpdf = tmpdf.dropna(subset=["product_name","nova_group","ingredients_text","code","countries_tags"])
 tmpdf = tmpdf[tmpdf.countries_tags.isin(['en:united-states'])]
-tmpdf['complexity'] = tmpdf["ingredients_text"].apply(get_complexity_score,args=("characters_per_word",))
+tmpdf['complexity'] = tmpdf["ingredients_text"].apply(get_complexity_score,args=(submeasure,))
 
 ## Group the temporary dataframe by NOVA groups
 nova1=tmpdf.loc[tmpdf['nova_group'] == 1.0]
 nova2=tmpdf.loc[tmpdf['nova_group'] == 2.0]
 nova3=tmpdf.loc[tmpdf['nova_group'] == 3.0]
 nova4=tmpdf.loc[tmpdf['nova_group'] == 4.0]
-```
 
-### Generate Figure 1a
-Define what submeasure to grab from the `readability` library and define it as `submeasure`, then grab the score for that submeasure for all ingredients lists in all products in the dataset:
-print("1v2:",stats.kruskal(nova1['complexity'],nova2['complexity']))
-print("1v3:",stats.kruskal(nova1['complexity'],nova3['complexity']))
-print("1v4:",stats.kruskal(nova1['complexity'],nova4['complexity']))
-print("2v3:",stats.kruskal(nova2['complexity'],nova3['complexity']))
-print("2v4:",stats.kruskal(nova2['complexity'],nova4['complexity']))
-print("3v4:",stats.kruskal(nova3['complexity'],nova4['complexity']))
-data = [nova1['complexity'],nova2['complexity'],nova3['complexity'],nova4['complexity']]
-fig7, ax7 = plt.subplots()
-ax7.set_title('Multiple Samples with Different sizes')
-ax7.boxplot(data)
+##########################
+#
+# The code below generates
+# Figure 1a
+#
+##########################
+
+nova2['complexity'],nova3['complexity'],nova4['complexity'])),columns =['NOVA 1', 'NOVA 2','NOVA 3', 'NOVA 4'])
+x="nova_group"
+y="complexity"
+tmpdf['nova_group'].replace(1.0,"1",inplace=True)
+tmpdf['nova_group'].replace(2.0,"2",inplace=True)
+tmpdf['nova_group'].replace(3.0,"3",inplace=True)
+tmpdf['nova_group'].replace(4.0,"4",inplace=True)
+order=['1','2','3','4']
+ax = sns.boxplot(data=tmpdf, x=x, y=y, order=order,showfliers=True)
+ax.set_xlabel("NOVA Group")
+ax.set_ylabel(submeasure)
+test_results = add_stat_annotation(ax, data=tmpdf, x=x, y=y, order=order,
+                                   box_pairs=[("1", "2"), ("2", "3"), ("3", "4"),("1","4")],
+                                   test='Mann-Whitney', text_format='star',
+                                   loc='inside', verbose=2)
+for res in test_results:
+    print(res)
 plt.show()
+
+
+
+```
 
 ### Table 1 Measures
 Gather mean, median, minimum, maximum from all 4 NOVA groups, then perform one-way ANOVA with post hoc Tukey test to identify where differences are.
@@ -135,6 +150,12 @@ nova3['ingredients_text'].str.count("organic").sum()/nova3['ingredients_text'].c
 nova4['ingredients_text'].str.count("organic").sum()
 nova4['ingredients_text'].count().sum()
 nova4['ingredients_text'].str.count("organic").sum()/nova4['ingredients_text'].count().sum()
+```
+
+### Figure 1a and 1b Geneation
+Define what submeasure to grab from the `readability` library and define it as `submeasure`, then grab the score for that submeasure for all ingredients lists in all products in the dataset:
+```
+
 ```
 
 python extract 
