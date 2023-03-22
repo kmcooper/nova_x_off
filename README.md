@@ -33,6 +33,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 import seaborn as sns
+from statsmodels.stats.multicomp import pairwise_tukeyhsd
 ```
 
 ### Analyze Ingredients by NOVA x Group
@@ -82,6 +83,7 @@ ax7.boxplot(data)
 plt.show()
 
 ### Table 1 Measures
+Gather mean, median, minimum, maximum from all 4 NOVA groups, then perform one-way ANOVA with post hoc Tukey test to identify where differences are.
 ```
 nova1['ingredients_text'].str.len().mean()
 nova2['ingredients_text'].str.len().mean()
@@ -102,6 +104,37 @@ nova1['ingredients_text'].str.len().max()
 nova2['ingredients_text'].str.len().max()
 nova3['ingredients_text'].str.len().max()
 nova4['ingredients_text'].str.len().max()
+
+## One way ANOVA with Tukey post hoc
+fvalue, pvalue = stats.f_oneway(nova1['ingredients_text'].str.len(),
+                                nova2['ingredients_text'].str.len(), 
+                                nova3['ingredients_text'].str.len(),
+                                nova4['ingredients_text'].str.len())
+print("F-stat=",fvalue)
+print("P-value=",pvalue)
+
+post_hoc_tukey=pairwise_tukeyhsd(endog=tmpdf['ingredients_text'].str.len(),groups=tmpdf['nova_group'],alpha=0.05)
+post_hoc_tukey=pairwise_tukeyhsd(tmpdf['ingredients_text'].str.len(),groups=tmpdf['nova_group'],alpha=0.05)
+print(post_hoc_tukey)
+```
+### Table 2 Measures
+Count how many rows per NOVA group contain the substring "organic", then count total rows per NOVA group and calculate the percentage of ingredients texts that contain the word organic
+```
+nova1['ingredients_text'].str.count("organic").sum()
+nova1['ingredients_text'].count().sum()
+nova1['ingredients_text'].str.count("organic").sum()/nova1['ingredients_text'].count().sum()
+
+nova2['ingredients_text'].str.count("organic").sum()
+nova2['ingredients_text'].count().sum()
+nova2['ingredients_text'].str.count("organic").sum()/nova2['ingredients_text'].count().sum()
+
+nova3['ingredients_text'].str.count("organic").sum()
+nova3['ingredients_text'].count().sum()
+nova3['ingredients_text'].str.count("organic").sum()/nova3['ingredients_text'].count().sum()
+
+nova4['ingredients_text'].str.count("organic").sum()
+nova4['ingredients_text'].count().sum()
+nova4['ingredients_text'].str.count("organic").sum()/nova4['ingredients_text'].count().sum()
 ```
 
 python extract 
