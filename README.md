@@ -3,17 +3,20 @@ This is the GitHub README page for the above titled project submitted to [tbd].
 
 ## Data Download
 
+Set up a file directory
 ```
-## Set up a file directory
 mkdir nova_x_off
 cd nova_x_off/
+```
 
-## Grab the data from Open Food Facts
+Grab the data from Open Food Facts; our download was performed on June 30, 2022 and file size was ~69.5 MB.
+```
 wget https://static.openfoodfacts.org/data/en.openfoodfacts.org.products.csv.gz
-# CSV downloaded on June 30, 2022
-# File size ~69.5MB
 gunzip en.openfoodfacts.org.products.csv.gz 
-# We are interested in the USA only so check to see how USA is labeled
+```
+
+We are interested in products in the USA only so check to see how USA is labeled
+```
 cut -f 38  en.openfoodfacts.org.products.csv | sort | uniq
 cut -f 38  en.openfoodfacts.org.products.csv | sort | uniq | grep "United States"
 head -n 1 en.openfoodfacts.org.products.csv > en.openfoodfacts.org.products.USonly.csv
