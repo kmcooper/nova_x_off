@@ -130,7 +130,6 @@ test_results = add_stat_annotation(ax, data=tmpdf, x=x, y=y, order=order,
 for res in test_results:
     print(res)
 plt.show()
-
 ```
 
 ### Table 1 Measures
