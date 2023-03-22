@@ -37,7 +37,8 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 from statannot import add_stat_annotation
 ```
 
-### Analyze Ingredients by NOVA x Group, Figure 1a and 1b Generation
+### Analyze Ingredients by NOVA x Group 
+The code below generates Figure 1a, 1b, and Figure 2 from the manuscript.
 Define what submeasure to grab from the `readability` library and define it as `submeasure`, then grab the score for that submeasure for all ingredients lists in all products in the dataset:
 ```
 submeasure="syll_per_word"
@@ -73,8 +74,7 @@ nova4=tmpdf.loc[tmpdf['nova_group'] == 4.0]
 # Figure 1a
 #
 ##########################
-
-nova2['complexity'],nova3['complexity'],nova4['complexity'])),columns =['NOVA 1', 'NOVA 2','NOVA 3', 'NOVA 4'])
+#nova2['complexity'],nova3['complexity'],nova4['complexity'])),columns =['NOVA 1', 'NOVA 2','NOVA 3', 'NOVA 4'])
 x="nova_group"
 y="complexity"
 tmpdf['nova_group'].replace(1.0,"1",inplace=True)
@@ -93,7 +93,43 @@ for res in test_results:
     print(res)
 plt.show()
 
+##########################
+#
+# The code below generates
+# Figure 1b
+#
+##########################
+ax = sns.violinplot(data=tmpdf,x=x,y=y,order=order)
+ax.set_xlabel("NOVA Group")
+ax.set_ylabel(submeasure)
+plt.show()
 
+##########################
+#
+# The code below generates
+# Figure 2
+#
+##########################
+submeasure="complex_words"
+tmpdf['complexity'] = tmpdf["ingredients_text"].apply(get_complexity_score,args=(submeasure,))
+#nova2['complexity'],nova3['complexity'],nova4['complexity'])),columns =['NOVA 1', 'NOVA 2','NOVA 3', 'NOVA 4'])
+x="nova_group"
+y="complexity"
+tmpdf['nova_group'].replace(1.0,"1",inplace=True)
+tmpdf['nova_group'].replace(2.0,"2",inplace=True)
+tmpdf['nova_group'].replace(3.0,"3",inplace=True)
+tmpdf['nova_group'].replace(4.0,"4",inplace=True)
+order=['1','2','3','4']
+ax = sns.boxplot(data=tmpdf, x=x, y=y, order=order,showfliers=True)
+ax.set_xlabel("NOVA Group")
+ax.set_ylabel(submeasure)
+test_results = add_stat_annotation(ax, data=tmpdf, x=x, y=y, order=order,
+                                   box_pairs=[("1", "2"), ("2", "3"), ("3", "4"),("1","4")],
+                                   test='Mann-Whitney', text_format='star',
+                                   loc='inside', verbose=2)
+for res in test_results:
+    print(res)
+plt.show()
 
 ```
 
@@ -150,83 +186,6 @@ nova3['ingredients_text'].str.count("organic").sum()/nova3['ingredients_text'].c
 nova4['ingredients_text'].str.count("organic").sum()
 nova4['ingredients_text'].count().sum()
 nova4['ingredients_text'].str.count("organic").sum()/nova4['ingredients_text'].count().sum()
-```
-
-### Figure 1a and 1b Geneation
-Define what submeasure to grab from the `readability` library and define it as `submeasure`, then grab the score for that submeasure for all ingredients lists in all products in the dataset:
-```
-
-```
-
-python extract 
-```
-# Options for readability measures are
-# Kincaid
-# ARI
-# Coleman-Liau
-# FleshReadingEase
-# GunningFogIndex
-# LIX
-# SMOGIndex
-# RIX
-# DaleChallIndex
-
-import pandas as pd
-import readability
-from nltk.tokenize import word_tokenize
-import sys
-measure_type="LIX"
-ingredients_list = "taco, burrito, fritos"
-def get_readability_score(ingredients,measure):
-  tokenized = word_tokenize(ingredients)
-  ingredients = tokenized
-  read = readability.getmeasures(ingredients,lang='en')
-  return round(read['readability grades'][measure],2)
-```
-script
-```
-
-df = pd.read_csv("en.openfoodfacts.org.products.USonly.csv",sep="\t")
-tmpdf = df[["product_name","nova_group","ingredients_text","code","countries_tags"]]
-tmpdf = tmpdf.dropna(subset=["product_name","nova_group","ingredients_text","code","countries_tags"])
-tmpdf = tmpdf[~tmpdf.countries_tags.isin(['en:united-states'])]
-tmpdf['readability_lix'] = tmpdf.apply(get_readability_score(tmpdf["ingredients_text"],"LIX"))
-
-```
-
-working script
-```
-import pandas as pd
-import readability
-from nltk.tokenize import word_tokenize
-import sys
-import numpy as np
-import matplotlib.pyplot as plt
-
-def get_readability_score(ingredients,measure):
-  return_value = -500
-  if(ingredients):
-    tokenized = word_tokenize(str(ingredients))
-    ingredients = tokenized
-    read = readability.getmeasures(ingredients,lang='en')
-    return_value = round(read['readability grades'][measure],2)
-  return return_value
-
-df = pd.read_csv("en.openfoodfacts.org.products.USonly.csv",sep="\t",encoding="utf-8-sig")
-tmpdf = df[["product_name","nova_group","ingredients_text","code","countries_tags"]]
-tmpdf = tmpdf.dropna(subset=["product_name","nova_group","ingredients_text","code","countries_tags"])
-tmpdf = tmpdf[~tmpdf.countries_tags.isin(['en:united-states'])]
-tmpdf['readability_lix'] = tmpdf["ingredients_text"].apply(get_readability_score,args=("ARI",))
-
-nova1=tmpdf.loc[tmpdf['nova_group'] == 1.0]
-nova2=tmpdf.loc[tmpdf['nova_group'] == 2.0]
-nova3=tmpdf.loc[tmpdf['nova_group'] == 3.0]
-nova4=tmpdf.loc[tmpdf['nova_group'] == 4.0]
-data = [nova1['readability_lix'],nova2['readability_lix'],nova3['readability_lix'],nova4['readability_lix']]
-fig7, ax7 = plt.subplots()
-ax7.set_title('Multiple Samples with Different sizes')
-ax7.boxplot(data)
-plt.show()
 ```
 
 ## License
