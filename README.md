@@ -9,7 +9,7 @@ mkdir nova_x_off
 cd nova_x_off/
 ```
 
-Grab the data from Open Food Facts; our download was performed on June 30, 2022 and file size was ~69.5 MB.
+Grab the data from Open Food Facts; our download was performed on June 30, 2022 and downloaded file size before unzip was ~69.5 MB.
 ```
 wget https://static.openfoodfacts.org/data/en.openfoodfacts.org.products.csv.gz
 gunzip en.openfoodfacts.org.products.csv.gz 
