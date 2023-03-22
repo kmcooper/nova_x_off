@@ -1,7 +1,7 @@
 # Measures of Reading Ease and NOVA Food Processing Classification on Ingredients Lists in the United States 
 This is the GitHub README page for the above titled project submitted to [tbd].
 
-## Data Download
+### Data Download and Preprocess
 
 Set up a file directory
 ```
@@ -22,6 +22,8 @@ cut -f 38  en.openfoodfacts.org.products.csv | sort | uniq | grep "United States
 head -n 1 en.openfoodfacts.org.products.csv > en.openfoodfacts.org.products.USonly.csv
 grep "United States" en.openfoodfacts.org.products.csv >> en.openfoodfacts.org.products.USonly.csv
 ```
+
+### Data Download and Preprocess
 
 python extract 
 ```
