@@ -81,7 +81,7 @@ ax7.set_title('Multiple Samples with Different sizes')
 ax7.boxplot(data)
 plt.show()
 
-### Generate Table 1
+### Table 1 Measures
 ```
 nova1['ingredients_text'].str.len().mean()
 nova2['ingredients_text'].str.len().mean()
