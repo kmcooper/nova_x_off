@@ -1,7 +1,7 @@
 # Measures of Reading Ease and NOVA Food Processing Classification on Ingredients Lists in the United States 
 This is the GitHub README page for the above titled project submitted to [tbd].
 
-### Data Download and Preprocess
+### Data Download and Do a little Preprocessing
 
 Set up a file directory
 ```
@@ -35,6 +35,7 @@ from scipy import stats
 import seaborn as sns
 ```
 
+### Analyze Ingredients by NOVA x Group
 Define what submeasure to grab from the `readability` library and define it as `submeasure`, then grab the score for that submeasure for all ingredients lists in all products in the dataset:
 ```
 submeasure="characters_per_word"
@@ -65,6 +66,9 @@ nova2=tmpdf.loc[tmpdf['nova_group'] == 2.0]
 nova3=tmpdf.loc[tmpdf['nova_group'] == 3.0]
 nova4=tmpdf.loc[tmpdf['nova_group'] == 4.0]
 ```
+
+### Generate Figure 1a
+Define what submeasure to grab from the `readability` library and define it as `submeasure`, then grab the score for that submeasure for all ingredients lists in all products in the dataset:
 print("1v2:",stats.kruskal(nova1['complexity'],nova2['complexity']))
 print("1v3:",stats.kruskal(nova1['complexity'],nova3['complexity']))
 print("1v4:",stats.kruskal(nova1['complexity'],nova4['complexity']))
@@ -77,6 +81,8 @@ ax7.set_title('Multiple Samples with Different sizes')
 ax7.boxplot(data)
 plt.show()
 
+### Generate Table 1
+```
 nova1['ingredients_text'].str.len().mean()
 nova2['ingredients_text'].str.len().mean()
 nova3['ingredients_text'].str.len().mean()
@@ -96,6 +102,7 @@ nova1['ingredients_text'].str.len().max()
 nova2['ingredients_text'].str.len().max()
 nova3['ingredients_text'].str.len().max()
 nova4['ingredients_text'].str.len().max()
+```
 
 python extract 
 ```
